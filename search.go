@@ -39,6 +39,7 @@ func searchEntry(path string) error {
 
 	cmd := exec.Command("grep", "-H", searchTerm, path)
 	cmd.Stdout = os.Stdout
+	cmd.Env = os.Environ()
 	err := cmd.Run()
 	if err != nil {
 		if exiterr, ok := err.(*exec.ExitError); ok {

@@ -7,7 +7,10 @@ import (
 	"path/filepath"
 )
 
-const tagebuchMagic = ".tagebuch"
+const (
+	tagebuchMagic = ".tagebuch"
+	tagebuchTodo  = "todo"
+)
 
 func initTagebuch(path string, x []string) error {
 	if len(x) != 0 {
@@ -29,6 +32,13 @@ func initTagebuch(path string, x []string) error {
 
 	pf := filepath.Join(path, tagebuchMagic)
 	f, err := os.OpenFile(pf, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	f.Close()
+
+	pt := filepath.Join(path, tagebuchTodo)
+	f, err = os.OpenFile(pt, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
