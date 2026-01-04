@@ -83,10 +83,10 @@ func edit(path string, x []string) error {
 
 	datePath := filepath.Join(path, fmt.Sprintf("%v/%v/%v", year, month, day))
 
-	return editDate(datePath, x[1:])
+	return editDate(path, datePath, x[1:])
 }
 
-func editDate(datePath string, x []string) error {
+func editDate(path, datePath string, x []string) error {
 	if len(x) != 0 {
 		return fmt.Errorf("trailing commands: %v", x)
 	}
@@ -96,7 +96,12 @@ func editDate(datePath string, x []string) error {
 		return fmt.Errorf("$EDITOR not set")
 	}
 
-	err := os.MkdirAll(datePath, 0755)
+	err := syncPull(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+
+	err = os.MkdirAll(datePath, 0755)
 	if err != nil {
 		return err
 	}
@@ -117,5 +122,11 @@ func editDate(datePath string, x []string) error {
 	if err != nil {
 		return err
 	}
+
+	err = syncPush(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+
 	return nil
 }

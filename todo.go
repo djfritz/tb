@@ -73,10 +73,21 @@ func (t *todos) save(path string) error {
 			return err
 		}
 	}
+
+	err = syncPush(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+
 	return nil
 }
 
 func todoLoad(path string) (*todos, error) {
+	err := syncPull(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+
 	// base path is already validated
 	pt := filepath.Join(path, tagebuchTodo)
 	f, err := os.Open(pt)
