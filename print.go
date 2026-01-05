@@ -78,12 +78,17 @@ func printEntry(path string, x []string) error {
 
 	datePath := filepath.Join(path, fmt.Sprintf("%v/%v/%v", year, month, day))
 
-	return printDate(datePath, x[1:])
+	return printDate(path, datePath, x[1:])
 }
 
-func printDate(datePath string, x []string) error {
+func printDate(path string, datePath string, x []string) error {
 	if len(x) != 0 {
 		return fmt.Errorf("trailing commands: %v", x)
+	}
+
+	err := syncPull(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 	}
 
 	f, err := os.Open(filepath.Join(datePath, entryName))
