@@ -125,7 +125,7 @@ func todoAdd(path string, x []string) error {
 	}
 
 	if len(x) != 1 {
-		return fmt.Errorf("trailing commands: %v", x[2:])
+		return fmt.Errorf("trailing commands: %v", x[1:])
 	}
 
 	text := strings.TrimSpace(x[0])
@@ -152,7 +152,7 @@ func todoComplete(path string, x []string) error {
 	}
 
 	if len(x) != 1 {
-		return fmt.Errorf("trailing commands: %v", x[2:])
+		return fmt.Errorf("trailing commands: %v", x[1:])
 	}
 
 	item := strings.TrimSpace(x[0])

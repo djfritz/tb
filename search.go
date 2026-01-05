@@ -18,7 +18,7 @@ func search(path string, x []string) error {
 	}
 
 	if len(x) != 1 {
-		return fmt.Errorf("trailing commands: %v", x[2:])
+		return fmt.Errorf("trailing commands: %v", x[1:])
 	}
 
 	searchTerm = x[0]
