@@ -1,50 +1,124 @@
 # Tagebuch
 
-Tagebuch (tb) is a simple wrapper for organizing a daily journal ("Tagebuch") and todo list, written in Go. 
+Tagebuch (`tb`) is a simple command-line tool for organizing daily journals ("Tagebuch" is German for "diary") and todo lists, written in Go.
 
-It organizes notes by day, supports multiple journals, and supports synchronizing with multiple installations via `git`. 
+It organizes notes by day in a directory structure (`year/month/day`), supports multiple journals, and optionally synchronizes across machines via Git.
+
+## Installation
+
+```bash
+go install github.com/djfritz/tb@latest
+```
+
+## Quick Start
+
+```bash
+# Initialize a new journal called "work"
+tb work init
+
+# Edit today's entry (opens $EDITOR)
+tb work edit today
+
+# Print today's entry
+tb work print today
+
+# Add a todo item
+tb work todo add "Review pull requests"
+
+# List all todos
+tb work todo
+```
 
 ## Commands
 
-`tb` organized as follows. A malformed command will present help at the current command level. 
+Commands support prefix matching (e.g., `tb work e tod` expands to `tb work edit today`). Invalid commands display help at the current level.
 
 ```
-tb <name of journal>
-    init                ( initialize a new journal)
+tb <journal>
+    init                    Initialize a new journal
     edit
-        yesterday       ( edit yesterday's entry )
-        today           ( edit today's entry )
-        tomorrow        ( edit tomorrow's entry )
-        year/month/day  ( edit an entry given by year/month/day )
+        today               Edit today's entry
+        yesterday           Edit yesterday's entry
+        tomorrow            Edit tomorrow's entry
+        <year/month/day>    Edit a specific date (e.g., 2026/1/6)
     print
-        yesterday       ( print yesterday's entry )
-        today           ( print today's entry )
-        tomorrow        ( print tomorrow's entry )
-        year/month/day  ( print an entry given by year/month/day )
-    todo                ( print todo items )
-        add             ( add a todo list item )
-        complete        ( remove a todo list item by number )
-    search <term>       ( print matching lines and entries to the given search term. Supports `grep` styled regular expressions )
+        today               Print today's entry
+        yesterday           Print yesterday's entry
+        tomorrow            Print tomorrow's entry
+        <year/month/day>    Print a specific date
+    todo                    List all todo items
+        add <text>          Add a todo item
+        complete <number>   Complete a todo item by its number
+    search <term>           Search entries using grep-style regular expressions
 ```
 
-## Installing
+## Configuration
 
-`tb` is still a work in progress. For now, `go install github.com/djfritz/tb@latest` is the best way to install and use `tb`.
+### Base Directory
 
-## Todo lists
+By default, journals are stored in `~/.tb/`. Override with the `-b` flag:
 
-Each journal keeps a simple todo list (see above commands). Adding new items with the same content will be ignored (deduplicated).
+```bash
+tb -b /path/to/journals work edit today
+```
 
-## Multiple journals
+### Editor
 
+`tb` uses the `$EDITOR` environment variable to open entries for editing. Ensure this is set:
 
+```bash
+export EDITOR=vim  # or emacs, etc.
+```
 
-## Git synchronization
+## Multiple Journals
 
-## My usage as an example
+`tb` supports working with multiple journals, each in a separate directory under the base path:
 
-## Planned features
+```bash
+tb personal init
+tb work init
+tb ideas init
+```
 
-- sync on demand instead of on every invocation
-- aliases for named documents
-- support for adding files to days 
+Each journal maintains its own entries and todo list.
+
+## Git Synchronization
+
+Enable Git sync to automatically pull before reading and push after writing entries.
+
+1. Initialize a Git repository in your journal directory:
+   ```bash
+   cd ~/.tb/work
+   git init
+   git remote add origin <your-remote-url>
+   ```
+
+2. Enable sync by adding to the journal's config file (`.tagebuch`):
+   ```
+   git=true
+   ```
+
+When enabled, `tb` will:
+- `git pull` before reading entries or todos
+- `git add -A && git commit && git push` after writing
+
+Git errors are printed to stderr but don't prevent the operation from completing.
+
+## Directory Structure
+
+```
+~/.tb/
+└── work/                   # Journal name
+    ├── .tagebuch           # Config file (presence marks valid journal)
+    ├── todo                # Todo list (one item per line)
+    └── 2026/
+        └── 1/
+            └── 6/
+                └── entry   # Daily entry file
+```
+
+## Planned Features
+
+- Sync on demand instead of on every invocation
+- Aliases for named documents
+- Support for adding files to daily entries
