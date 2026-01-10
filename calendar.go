@@ -136,10 +136,10 @@ func showCalendar(path string, year, month int, x []string) error {
 
 // ANSI color codes
 const (
-	colorReset  = "\033[0m"
-	colorGreen  = "\033[32m"
-	colorBlue   = "\033[34m"
-	colorBold   = "\033[1m"
+	colorReset = "\033[0m"
+	colorGreen = "\033[32m"
+	colorBlue  = "\033[34m"
+	colorBold  = "\033[1m"
 )
 
 func renderCalendar(year, month int, entries map[int]bool, files map[int]bool) {
@@ -175,7 +175,7 @@ func renderCalendar(year, month int, entries map[int]bool, files map[int]bool) {
 				hasFiles := files[day]
 				if hasEntry && hasFiles {
 					// both entry and files: green with * marker
-					fmt.Printf("%s%s%2d*%s│", colorBold, colorGreen, day, colorReset)
+					fmt.Printf(" %s%s%2d%s*%s│", colorBold, colorGreen, day, colorBlue, colorReset)
 				} else if hasEntry {
 					// entry only: green
 					fmt.Printf(" %s%s%2d%s │", colorBold, colorGreen, day, colorReset)
