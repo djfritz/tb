@@ -50,6 +50,10 @@ tb <journal>
         add <text>          Add a todo item
         complete <number>   Complete a todo item by its number
     search <term>           Search entries using grep-style regular expressions
+    calendar                Show this month's calendar (days with entries highlighted)
+        last                Show last month's calendar
+        next                Show next month's calendar
+        <year/month>        Show a specific month (e.g., 2026/1)
 ```
 
 ## Configuration

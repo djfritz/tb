@@ -9,6 +9,7 @@ var baseCommands = &Options{
 		"print",
 		"todo",
 		"search",
+		"calendar",
 	},
 	descriptions: []string{
 		"initialize a new tagebuch",
@@ -16,6 +17,7 @@ var baseCommands = &Options{
 		"print an entry",
 		"interact with todos",
 		"search within a tagebuch",
+		"show calendar of entries",
 	},
 }
 
@@ -40,6 +42,8 @@ func base(path string, x []string) error {
 		return todo(path, x[1:])
 	case "search":
 		return search(path, x[1:])
+	case "calendar":
+		return calendar(path, x[1:])
 	default:
 		return fmt.Errorf("invalid command %v", r)
 	}
