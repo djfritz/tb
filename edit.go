@@ -58,20 +58,32 @@ func edit(path string, x []string) error {
 	} else {
 		r, err := Apropos(x[0], editCommands.commands)
 		if err != nil {
-			return fmt.Errorf("%w\n%v", err, dateHelp)
+			// try alias lookup
+			aliasDate, aliasErr := aliasLookup(path, x[0])
+			if aliasErr != nil {
+				return aliasErr
+			}
+			if aliasDate != "" {
+				parts := strings.Split(aliasDate, "/")
+				year, _ = strconv.Atoi(parts[0])
+				month, _ = strconv.Atoi(parts[1])
+				day, _ = strconv.Atoi(parts[2])
+			} else {
+				return fmt.Errorf("%w\n%v", err, dateHelp)
+			}
+		} else {
+			when := time.Now()
+			switch r {
+			case "today":
+			case "yesterday":
+				when = when.Add(-24 * time.Hour)
+			case "tomorrow":
+				when = when.Add(24 * time.Hour)
+			}
+			year = when.Year()
+			month = int(when.Month())
+			day = when.Day()
 		}
-
-		when := time.Now()
-		switch r {
-		case "today":
-		case "yesterday":
-			when = when.Add(-24 * time.Hour)
-		case "tomorrow":
-			when = when.Add(24 * time.Hour)
-		}
-		year = when.Year()
-		month = int(when.Month())
-		day = when.Day()
 	}
 
 	// validate
