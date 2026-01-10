@@ -175,7 +175,7 @@ func renderCalendar(year, month int, entries map[int]bool, files map[int]bool) {
 				hasFiles := files[day]
 				if hasEntry && hasFiles {
 					// both entry and files: green with * marker
-					fmt.Printf("%s%s%2d%s%s*%s│", colorBold, colorGreen, day, colorReset, colorBlue, colorReset)
+					fmt.Printf("%s%s%2d*%s│", colorBold, colorGreen, day, colorReset)
 				} else if hasEntry {
 					// entry only: green
 					fmt.Printf(" %s%s%2d%s │", colorBold, colorGreen, day, colorReset)
