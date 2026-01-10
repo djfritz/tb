@@ -98,5 +98,17 @@ func printDate(path string, datePath string, x []string) error {
 	io.Copy(os.Stdout, f)
 	f.Close()
 
+	// list any attached files
+	files, err := listFilesInDay(datePath)
+	if err != nil {
+		return err
+	}
+	if len(files) > 0 {
+		fmt.Println("\n--- Files ---")
+		for _, file := range files {
+			fmt.Println(file)
+		}
+	}
+
 	return nil
 }

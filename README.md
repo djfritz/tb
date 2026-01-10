@@ -42,7 +42,7 @@ tb <journal>
         tomorrow            Edit tomorrow's entry
         <year/month/day>    Edit a specific date (e.g., 2026/1/6)
     print
-        today               Print today's entry
+        today               Print today's entry (also lists attached files)
         yesterday           Print yesterday's entry
         tomorrow            Print tomorrow's entry
         <year/month/day>    Print a specific date
@@ -50,7 +50,17 @@ tb <journal>
         add <text>          Add a todo item
         complete <number>   Complete a todo item by its number
     search <term>           Search entries using grep-style regular expressions
-    calendar                Show this month's calendar (days with entries highlighted)
+    list                    List all days with entries (for scripting)
+    sync                    Manually sync with git remote (pull then push)
+    alias                   List all aliases
+        add <name> <date>   Create an alias to a date (e.g., alias add "great thoughts" 2026/1/6)
+        remove <name>       Remove an alias by name
+    files
+        add <date> <path>   Copy a file into a day's directory
+        list <date>         List files attached to a day
+        remove <date> <name> Remove a file from a day
+        copy <date> <name> <dest> Copy a file out to a destination path
+    calendar                Show this month's calendar (days with entries highlighted in green, files marked with *)
         last                Show last month's calendar
         next                Show next month's calendar
         <year/month>        Show a specific month (e.g., 2026/1)
@@ -115,14 +125,10 @@ Git errors are printed to stderr but don't prevent the operation from completing
 └── work/                   # Journal name
     ├── .tagebuch           # Config file (presence marks valid journal)
     ├── todo                # Todo list (one item per line)
+    ├── aliases             # Named aliases to dates (name=year/month/day)
     └── 2026/
         └── 1/
             └── 6/
-                └── entry   # Daily entry file
+                ├── entry       # Daily entry file
+                └── photo.jpg   # Attached files
 ```
-
-## Planned Features
-
-- Sync on demand instead of on every invocation
-- Aliases for named documents
-- Support for adding files to daily entries

@@ -33,6 +33,10 @@ func syncPull(path string) error {
 		return nil
 	}
 
+	return doGitPull(path)
+}
+
+func doGitPull(path string) error {
 	cmd := exec.Command("git", "pull")
 	cmd.Env = os.Environ()
 	cmd.Dir = path
@@ -52,6 +56,10 @@ func syncPush(path string) error {
 		return nil
 	}
 
+	return doGitPush(path)
+}
+
+func doGitPush(path string) error {
 	cmd := exec.Command("git", "add", "-A")
 	cmd.Env = os.Environ()
 	cmd.Dir = path
@@ -77,4 +85,19 @@ func syncPush(path string) error {
 	}
 
 	return nil
+}
+
+// sync performs a manual git sync (pull then push), regardless of config
+func sync(path string, x []string) error {
+	if len(x) > 0 {
+		return fmt.Errorf("trailing commands: %v", x)
+	}
+	if err := validate(path); err != nil {
+		return err
+	}
+
+	if err := doGitPull(path); err != nil {
+		return err
+	}
+	return doGitPush(path)
 }

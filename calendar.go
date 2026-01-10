@@ -96,9 +96,10 @@ func showCalendar(path string, year, month int, x []string) error {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
-	// find which days have entries
+	// find which days have entries and files
 	monthPath := filepath.Join(path, fmt.Sprintf("%v/%v", year, month))
 	daysWithEntries := make(map[int]bool)
+	daysWithFiles := make(map[int]bool)
 
 	filepath.WalkDir(monthPath, func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -120,19 +121,28 @@ func showCalendar(path string, year, month int, x []string) error {
 		return nil
 	})
 
+	// check for files in each day
+	for day := 1; day <= daysIn(month, year); day++ {
+		dayPath := filepath.Join(monthPath, strconv.Itoa(day))
+		if hasFilesInDay(dayPath) {
+			daysWithFiles[day] = true
+		}
+	}
+
 	// render calendar
-	renderCalendar(year, month, daysWithEntries)
+	renderCalendar(year, month, daysWithEntries, daysWithFiles)
 	return nil
 }
 
 // ANSI color codes
 const (
-	colorReset = "\033[0m"
-	colorGreen = "\033[32m"
-	colorBold  = "\033[1m"
+	colorReset  = "\033[0m"
+	colorGreen  = "\033[32m"
+	colorBlue   = "\033[34m"
+	colorBold   = "\033[1m"
 )
 
-func renderCalendar(year, month int, entries map[int]bool) {
+func renderCalendar(year, month int, entries map[int]bool, files map[int]bool) {
 	t := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 	monthName := t.Month().String()
 
@@ -161,8 +171,17 @@ func renderCalendar(year, month int, entries map[int]bool) {
 			} else if day > daysInMonth {
 				fmt.Print("    │")
 			} else {
-				if entries[day] {
+				hasEntry := entries[day]
+				hasFiles := files[day]
+				if hasEntry && hasFiles {
+					// both entry and files: green with * marker
+					fmt.Printf("%s%s%2d%s%s*%s│", colorBold, colorGreen, day, colorReset, colorBlue, colorReset)
+				} else if hasEntry {
+					// entry only: green
 					fmt.Printf(" %s%s%2d%s │", colorBold, colorGreen, day, colorReset)
+				} else if hasFiles {
+					// files only: blue with * marker
+					fmt.Printf(" %s%s%2d*%s│", colorBold, colorBlue, day, colorReset)
 				} else {
 					fmt.Printf(" %2d │", day)
 				}
