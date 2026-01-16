@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -97,7 +98,11 @@ func sync(path string, x []string) error {
 	}
 
 	if err := doGitPull(path); err != nil {
-		return err
+		log.Println(err)
 	}
-	return doGitPush(path)
+	err := doGitPush(path)
+	if err != nil {
+		log.Println(err)
+	}
+	return nil
 }
