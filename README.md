@@ -64,6 +64,7 @@ tb <journal>
         last                Show last month's calendar
         next                Show next month's calendar
         <year/month>        Show a specific month (e.g., 2026/1)
+    serve <host:port>       Start a web server for managing todos (e.g., serve localhost:8080)
 ```
 
 ## Configuration

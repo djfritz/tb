@@ -11,11 +11,11 @@ import (
 )
 
 func serve(path string, x []string) error {
-	if len(x) != 2 {
-		return fmt.Errorf("serve requires 2 arguments: <todo> <host:port>")
+	if len(x) != 1 {
+		return fmt.Errorf("serve requires 1 argument: <host:port>")
 	}
 
-	hostPort := x[1]
+	hostPort := x[0]
 
 	// Validate that the journal exists
 	if err := validate(path); err != nil {
