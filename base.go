@@ -14,6 +14,7 @@ var baseCommands = &Options{
 		"sync",
 		"alias",
 		"files",
+		"serve",
 	},
 	descriptions: []string{
 		"initialize a new tagebuch",
@@ -26,6 +27,7 @@ var baseCommands = &Options{
 		"sync with git remote",
 		"manage named aliases to dates",
 		"manage files attached to entries",
+		"serve a web UI (currently only for todo lists)",
 	},
 }
 
@@ -60,6 +62,8 @@ func base(path string, x []string) error {
 		return alias(path, x[1:])
 	case "files":
 		return files(path, x[1:])
+	case "serve":
+		return serve(path, x[1:])
 	default:
 		return fmt.Errorf("invalid command %v", r)
 	}
