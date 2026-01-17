@@ -38,8 +38,7 @@ func serve(path string, x []string) error {
 }
 
 type todoServer struct {
-	path     string
-	todoPath string
+	path string
 }
 
 func (ts *todoServer) serveHTML(w http.ResponseWriter, r *http.Request) {
